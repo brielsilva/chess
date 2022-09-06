@@ -1,0 +1,10 @@
+{
+  "name": "back-replay",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js --es-module-specifier-resolution=node"
+  },
+  "type": "module",
+  "license": "MIT"
+}
