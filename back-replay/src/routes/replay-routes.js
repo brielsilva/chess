@@ -1,5 +1,6 @@
 import gameService from "../service/game-service.js";
 import { once } from "node:events";
+import {parse} from 'node:url';
 import Move from "../entities/move.js";
 import HEADERS from "../util/headers.js";
 
@@ -7,9 +8,7 @@ const replayRoutes = ({ gameService }) => ({
   "replay:get": async (request, response) => {
     const id = parse(request.url, true).pathname.split("/")[2];
     if (!id) {
-      response.writeHead(404, HEADERS.DEFAULT_HEADER);
-      response.write("Jogo não encontrado");
-      response.end();
+      throw new Error("Jogo não encontrado - 404");
     }
     response.writeHead(200, HEADERS.DEFAULT_HEADER);
     response.write("Jogo encontrado");

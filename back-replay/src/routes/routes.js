@@ -6,12 +6,22 @@ import replayRoutes from "./replay-routes.js";
 const allRoutes = {
   ...replayRoutes,
   default: async (request, response) => {
-    const pa = parse(request.url, true);
-    console.log(pa.query);
     response.writeHead(404, HEADERS.DEFAULT_HEADER);
     response.end();
   },
 };
+
+async function handleError(response,err) {
+  return ((error) => {
+    response.writeHead(err.message.split("-")[1].trim(), HEADERS.DEFAULT_HEADER);
+    response.write(
+      JSON.stringify({
+        error: err.message.split("-")[0].trim(),
+      })
+    );
+    response.end();
+  })();
+}
 
 class Routes {
   static async handler(request, response) {
@@ -19,19 +29,7 @@ class Routes {
     const { pathname, query } = parse(url, true);
     const key = `${pathname.split("/")[1]}:${method.toLowerCase()}`;
     const chosen = allRoutes[key] || allRoutes.default;
-    console.log(chosen);
-    return Promise.resolve(chosen(request, response)).catch();
-  }
-
-  async handleError(response) {
-    return (error) => {
-      response.writeHead(500, HEADERS.DEFAULT_HEADER);
-      response.write(
-        JSON.stringify({
-          error: "internet server error",
-        })
-      );
-    };
+    return Promise.resolve(chosen(request, response)).catch(err =>handleError(response,err));
   }
 }
 
