@@ -18,11 +18,15 @@ const replayRoutes = ({ gameService }) => ({
   "start:post": async (request, response) => {
     const data = await once(request, "data");
     const item = JSON.parse(data);
-    const move = new Move(item);
+    const result = gameService.create(item);
+    if(!result.success) {
+      throw new Error("Parâmetros invalidos - 400");
+    }
+    //const current = gameService.save(result.move);
     response.writeHead(201, HEADERS.DEFAULT_HEADER);
     response.write(
       JSON.stringify({
-        sucess: move,
+        success: result.move,
       })
     );
     response.end();

@@ -13,6 +13,7 @@ const allRoutes = {
 
 async function handleError(response,err) {
   return ((error) => {
+    console.log(err);
     response.writeHead(err.message.split("-")[1].trim(), HEADERS.DEFAULT_HEADER);
     response.write(
       JSON.stringify({
