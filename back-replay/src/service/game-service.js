@@ -18,7 +18,11 @@ class GameService {
 
   async find(id) {
     const data = await this.repository.findFile(id);
-    return data;
+    return data[1];
+  }
+
+  async length() {
+    return await this.repository.length();
   }
 }
 

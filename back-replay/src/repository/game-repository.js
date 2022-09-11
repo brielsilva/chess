@@ -11,11 +11,12 @@ class GameRepository {
   }
 
   async findFile(filename) {
-    const path = join(this.file, filename);
+    const path = join(this.file, `${filename}.json`);
     try {
       const data = JSON.parse(await readFile(path));
       return [path, data];
     } catch (e) {
+      console.log(e);
       return await this.createJson(this.removeType(filename));
     }
   }
@@ -26,9 +27,11 @@ class GameRepository {
 
   async create(data, onto) {
     const [currentFile, fileData] = await this.findFile(onto);
+    const id = fileData.length + 1;
+    data[id] = id;
     fileData.push(data);
-
-    return await writeFile(currentFile, JSON.stringify(fileData));
+    await writeFile(currentFile, JSON.stringify(fileData));
+    return data;
   }
 
   async createJson(id) {
@@ -41,6 +44,11 @@ class GameRepository {
   removeType(filename) {
     const name = filename.split(".")[0];
     return name;
+  }
+
+  async length() {
+    const file = await readdir(this.file);
+    return file.length;
   }
 }
 
