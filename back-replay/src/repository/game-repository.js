@@ -14,6 +14,7 @@ class GameRepository {
     const path = join(this.file, `${filename}.json`);
     try {
       const data = JSON.parse(await readFile(path));
+      console.log(data);
       return [path, data];
     } catch (e) {
       console.log(e);
@@ -47,8 +48,21 @@ class GameRepository {
   }
 
   async length() {
-    const file = await readdir(this.file);
-    return file.length;
+    try {
+      const file = await readdir(this.file);
+      return file.length;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async all() {
+    try {
+      const data = await readdir(this.file);
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 

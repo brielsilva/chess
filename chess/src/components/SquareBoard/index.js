@@ -7,6 +7,7 @@ import { Square } from "./style";
 
 export default function SquareBoard({ piece, color, position, set }) {
   const [promotion, setPromotion] = useState(null);
+  const [id, setId] = useState(null);
   const [, drop] = useDrop({
     accept: "piece",
     drop: (item) => {
@@ -14,12 +15,13 @@ export default function SquareBoard({ piece, color, position, set }) {
       if (currentPosition === position) {
         return;
       }
-      handleMove(currentPosition, position);
+      handleMove(currentPosition, position, id);
     },
   });
 
   useEffect(() => {
-    const subscribe = gameSubject.subscribe(({ pending }) => {
+    const subscribe = gameSubject.subscribe(({ pending, id }) => {
+      id && setId(id);
       pending && pending.to === position
         ? setPromotion(pending)
         : setPromotion(null);

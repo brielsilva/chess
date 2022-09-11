@@ -6,12 +6,11 @@ import HEADERS from "../util/headers.js";
 const replayRoutes = ({ gameService }) => ({
   "replay:get": async (request, response) => {
     const id = parse(request.url, true).pathname.split("/")[2];
-    console.log(id);
     if (!id) {
       throw new Error("Jogo não encontrado - 404");
     }
     const data = await gameService.find(id);
-    response.writeHead(200, HEADERS.DEFAULT_HEADER);
+    response.writeHead(200, HEADERS.headers);
     response.write(
       JSON.stringify({
         data: data,
@@ -30,7 +29,7 @@ const replayRoutes = ({ gameService }) => ({
       throw new Error("Parâmetros invalidos - 400");
     }
     const result = await gameService.save(item.move, id);
-    response.writeHead(201, HEADERS.DEFAULT_HEADER);
+    response.writeHead(201, HEADERS.headers);
     response.write(
       JSON.stringify({
         success: result,
@@ -40,11 +39,22 @@ const replayRoutes = ({ gameService }) => ({
   }, // Adiciona dado ao arquivo dentro do folder
   "start:post": async (request, response) => {
     const length = await gameService.length();
+    console.log(length);
     const id = length + 1;
-    response.writeHead(201, HEADERS.DEFAULT_HEADER);
+    response.writeHead(201, HEADERS.headers);
     response.write(
       JSON.stringify({
         success: id,
+      })
+    );
+    response.end();
+  },
+  "length:get": async (request, response) => {
+    const length = await gameService.all();
+    response.writeHead(201, HEADERS.headers);
+    response.write(
+      JSON.stringify({
+        success: length,
       })
     );
     response.end();

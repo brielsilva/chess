@@ -24,6 +24,15 @@ class GameService {
   async length() {
     return await this.repository.length();
   }
+
+  async all() {
+    try {
+      return await this.repository.all();
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+    }
+  }
 }
 
 export default new GameService(Move, gameRepository);
