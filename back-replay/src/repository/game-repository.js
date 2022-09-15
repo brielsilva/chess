@@ -1,28 +1,36 @@
+import { readdir } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
+
+const currentDir = dirname(fileURLToPath(import.meta));
+const filepath = join(currentDir,"./../database");
 class GameRepository {
-    constructor({ file }) {
-        this.file = file;
+    constructor({ dir }) {
+        this.file = dir;
     }
 
-    async _currentFile() {
-        return JSON.parse(await readFile(this.file));
+    async findFile(filename) {} // Encontrar o arquivo com base no nome
+
+    async length() {} // Retornar a quantidade de arquivos no diretório
+
+    async _currentDir() {
+        return JSON.parse(await readdir(this.file));
     }
 
-    async find() {
-        return this._currentFile();
-    }
-
-    async create(data) {
-        const currentFile = await this._currentFile();
+    async create(data,file) { // Adicionar dados ao arquivo
+        const currentFile = await this.findFile(file); 
         currentFile.push(data);
 
         return await writeFile(this.file, JSON.stringify(currentFile));
     }
+
+    async createFile(name) {} // Criar o arquivo
 }
 
 const gameRepository = new GameRepository({
-    file: "../database/data.json",
+    dir: filepath
 });
 
 export default gameRepository;
