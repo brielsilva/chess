@@ -1,8 +1,7 @@
 export default class Move {
-  constructor({ position, type, color, attacked }) {
-    this.position = position;
-    this.type = type;
-    this.color = color;
-    this.attacked = attacked;
-  }
+    constructor({ from, to, promotion }) {
+        this.from = from;
+        this.to = to;
+        this.promotion = promotion;
+    }
 }
